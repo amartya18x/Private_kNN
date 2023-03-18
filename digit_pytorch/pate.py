@@ -35,7 +35,7 @@ import sys
 import os
 sys.path.append('..')
 #import autodp
-from autodp.autodp import rdp_bank, dp_acct, rdp_acct, privacy_calibrator
+from autodp import rdp_bank, dp_acct, rdp_acct, privacy_calibrator
 import metrics
 prob = 0.15  # subsample probability for i
 acct = rdp_acct.anaRDPacct()
@@ -84,10 +84,15 @@ def prepare_student_data( save=False):
     elif config.dataset =='svhn':
         test_dataset = dataset.SVHN(root=config.data_dir, train=False, download=True)
         ori_test_data = [ data[0] for idx, data in enumerate(test_dataset)]
+    elif config.dataset =='cifar10':
+        train_dataset = dataset.CIFAR10(root=config.data_dir, train=True, download=True)
+        test_dataset = dataset.CIFAR10(root=config.data_dir, train=False, download=True)
+        ori_test_data = [ data[0] for idx, data in enumerate(test_dataset)]
+        ori_train_data = [ data[0] for idx, data in enumerate(train_dataset)]
     #print('whether img or numpy', type(ori_train_data[0]))
     test_labels = test_dataset.targets
     test_labels = np.array(test_labels)
-    stdnt_data = ori_test_data[:config.stdnt_share]
+    stdnt_data = ori_train_data[config.train_split:]
     # Compute teacher predictions for student training data
     teachers_preds = ensemble_preds(config.nb_teachers, stdnt_data)
 
@@ -108,11 +113,11 @@ def prepare_student_data( save=False):
     else:
         print('Composition 2 gives {}'.format(acct.get_eps(delta), delta))
     # Print accuracy of aggregated label
-    ac_ag_labels = metrics.accuracy(stdnt_labels, test_labels[:config.stdnt_share][idx])
+    ac_ag_labels = metrics.accuracy(stdnt_labels, test_labels[idx])
     print("Accuracy of the aggregated labels: " + str(ac_ag_labels))
     # Store unused part of test set for use as a test set after student training
-    stdnt_test_data = ori_test_data[config.stdnt_share:]
-    stdnt_test_labels = test_labels[config.stdnt_share:]
+    stdnt_test_data = ori_test_data
+    stdnt_test_labels = test_labels
     #ori_test_data = np.array(ori_test_data)
     if config.use_uda:
         utils.convert_vat(idx, remain_idx,numpy_test_data, test_labels, stdnt_labels)
@@ -127,7 +132,7 @@ def prepare_student_data( save=False):
             np.save(file_obj, teachers_preds)
     
     #condident data are those which pass the noisy screening 
-    confident_data = [ ori_test_data[:config.stdnt_share][i] for i in idx[0]]
+    confident_data = [ ori_train_data[config.train_split][i] for i in idx[0]]
     return confident_data, stdnt_labels, stdnt_test_data, stdnt_test_labels
 
 
@@ -158,4 +163,5 @@ def main(argv=None):  # pylint: disable=unused-argument
     train_student(config.nb_teachers)
 
 
-main()
+if __name__ == '__main__':
+    main()

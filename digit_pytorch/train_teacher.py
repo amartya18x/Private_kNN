@@ -72,7 +72,7 @@ def train_tracher():
     elif config.dataset =='cifar10':
         train_dataset = dataset.CIFAR10(root=config.data_dir, train=True, download=True)
         test_dataset = dataset.CIFAR10(root=config.data_dir, train=False, download=True)
-        ori_train_data = np.concatenate((train_dataset.data,),axis=0)
+        ori_train_data = np.concatenate((train_dataset.data[:config.train_split],),axis=0)
         # ori_train_data = np.transpose(ori_train_data, (0, 3, 1, 2))
         print('orig data shape', ori_train_data.shape)
         #ori_train_data= [ data[0] for idx, data in enumerate(train_dataset.data)]
@@ -82,7 +82,7 @@ def train_tracher():
         test_labels = test_dataset.targets
         train_labels =  train_dataset.targets
     batch_len = int(len(ori_train_data)/config.nb_teachers)
-    for i in range(0,1):
+    for i in range(0,config.nb_teachers):
         dir_path = os.path.join(config.save_model,'pate_'+str(config.nb_teachers))
         utils.mkdir_if_missing(dir_path)
         filename = os.path.join(dir_path, str(config.nb_teachers) + '_teachers_' + str(i) + config.arch+'.checkpoint.pth.tar')

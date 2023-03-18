@@ -9,7 +9,7 @@ import os.path as osp
 import numpy as np
 import scipy.io as sio
 from sklearn.metrics import hamming_loss
-import svhn_config as config
+import cifar_config as config
 config = config.config
 import torch
 import torch.optim as optim
@@ -37,7 +37,7 @@ def learning_rate(init, epoch):
     elif(step > 50000):
         optim_factor = 1
 
-    return init*math.pow(0.2, optim_factor)
+    return init#*math.pow(0.2, optim_factor)
 
 def train_each_teacher(num_epoch,train_data, train_label,test_data,test_label,save_path):
 
@@ -214,13 +214,21 @@ def pred(data,save_path,return_feature = False):
     else:
         print("Currently using CPU (GPU is highly recommended)")
 
-
+    print(config.dataset)
     if config.dataset =='mnist':
         transform_test = T.Compose([
         T.Resize((config.height, config.width)),
         T.ToTensor(),
         T.Normalize(mean=[0.1307], std=[0.3081]),])
+    elif config.dataset =='cifar10':
+        print("RIGFHT")
+        transform_test = T.Compose([
+        T.Resize((config.height, config.width)),
+        T.ToTensor(),
+        T.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+        ])
     else:
+        print("LEFT")
         transform_test = T.Compose([
         T.ToPILImage(),
         T.Resize((config.height, config.width)),
