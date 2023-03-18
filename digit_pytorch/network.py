@@ -150,12 +150,13 @@ def train(epoch, model, criterion, optimizer, trainloader, use_gpu):
     data_time = AverageMeter()
 
     model.train()
-    print('len of trainloader',len(trainloader))
+    print('Alen of trainloader',len(trainloader))
+    print(trainloader)
     for batch_idx, (imgs, pids) in enumerate(trainloader):
         if use_gpu:
             imgs, pids = imgs.cuda(), pids.cuda()
 
-        pids = pids.type(torch.cuda.FloatTensor)
+            pids = pids.type(torch.cuda.FloatTensor)
         outputs = model(imgs)
         #print('outputs shape', outputs.shape, 'label shape', pids.shape)
         #loss = F.nll_loss(outputs, pids.long())

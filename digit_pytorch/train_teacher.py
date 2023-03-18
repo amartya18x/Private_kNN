@@ -16,7 +16,7 @@
 
 import os
 
-import svhn_config as config
+import cifar_config as config
 from torchvision import datasets as dataset
 config = config.config
 from PIL import Image
@@ -69,6 +69,18 @@ def train_tracher():
         train_labels = [ll for ll in train_dataset.labels]
         for ll in extra_labels:
             train_labels.append(ll)
+    elif config.dataset =='cifar10':
+        train_dataset = dataset.CIFAR10(root=config.data_dir, train=True, download=True)
+        test_dataset = dataset.CIFAR10(root=config.data_dir, train=False, download=True)
+        ori_train_data = np.concatenate((train_dataset.data,),axis=0)
+        # ori_train_data = np.transpose(ori_train_data, (0, 3, 1, 2))
+        print('orig data shape', ori_train_data.shape)
+        #ori_train_data= [ data[0] for idx, data in enumerate(train_dataset.data)]
+        #for data in extra_dataset.data:
+        #    ori_train_data.append(data)
+        ori_test_data = [ data for idx, data in enumerate(test_dataset.data)]
+        test_labels = test_dataset.targets
+        train_labels =  train_dataset.targets
     batch_len = int(len(ori_train_data)/config.nb_teachers)
     for i in range(0,1):
         dir_path = os.path.join(config.save_model,'pate_'+str(config.nb_teachers))
@@ -81,6 +93,6 @@ def train_tracher():
         t_labels = train_labels[start: end] 
         network.train_each_teacher(config.teacher_epoch, t_data, t_labels, ori_test_data, test_labels, filename)
 
-
-train_tracher()
+if __name__ == '__main__':
+    train_tracher()
 

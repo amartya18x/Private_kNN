@@ -16,7 +16,7 @@
 
 import os
 
-import mnist_config as config
+import cifar_config as config
 from torchvision import datasets as dataset
 config = config.config
 from PIL import Image
@@ -35,7 +35,7 @@ import sys
 import os
 sys.path.append('..')
 #import autodp
-from autodp1.autodp import rdp_bank, dp_acct, rdp_acct, privacy_calibrator
+from autodp.autodp import rdp_bank, dp_acct, rdp_acct, privacy_calibrator
 import metrics
 prob = 0.15  # subsample probability for i
 acct = rdp_acct.anaRDPacct()
