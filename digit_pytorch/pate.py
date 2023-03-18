@@ -25,6 +25,7 @@ import aggregation
 import transforms as T
 import pickle
 import autodp
+from dataset_loader import RescaledCIFAR10
 
 #from dataset_loader import ImageDataset
 import network
@@ -85,8 +86,8 @@ def prepare_student_data( save=False):
         test_dataset = dataset.SVHN(root=config.data_dir, train=False, download=True)
         ori_test_data = [ data[0] for idx, data in enumerate(test_dataset)]
     elif config.dataset =='cifar10':
-        train_dataset = dataset.CIFAR10(root=config.data_dir, train=True, download=True)
-        test_dataset = dataset.CIFAR10(root=config.data_dir, train=False, download=True)
+        train_dataset = RescaledCIFAR10(root=config.data_dir, train=True, download=True)
+        test_dataset = RescaledCIFAR10(root=config.data_dir, train=False, download=True)
         ori_test_data = [ data[0] for idx, data in enumerate(test_dataset)]
         ori_train_data = [ data[0] for idx, data in enumerate(train_dataset)]
     #print('whether img or numpy', type(ori_train_data[0]))

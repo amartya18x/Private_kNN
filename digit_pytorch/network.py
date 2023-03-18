@@ -74,7 +74,7 @@ def train_each_teacher(num_epoch,train_data, train_label,test_data,test_label,sa
         transform_train = T.Compose([
             #T.Random2DTranslation(config.height, config.width),
             T.ToPILImage(),
-            T.RandomCrop(32, padding=4),
+            # T.RandomCrop(32, padding=4),
             T.RandomHorizontalFlip(),
             T.ToTensor(),
             #T.Resize(32),
@@ -221,14 +221,11 @@ def pred(data,save_path,return_feature = False):
         T.ToTensor(),
         T.Normalize(mean=[0.1307], std=[0.3081]),])
     elif config.dataset =='cifar10':
-        print("RIGFHT")
         transform_test = T.Compose([
-        T.Resize((config.height, config.width)),
+        # T.Resize((config.height, config.width)),
         T.ToTensor(),
-        T.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
-        ])
+        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
     else:
-        print("LEFT")
         transform_test = T.Compose([
         T.ToPILImage(),
         T.Resize((config.height, config.width)),

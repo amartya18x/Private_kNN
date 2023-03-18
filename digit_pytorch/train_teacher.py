@@ -25,7 +25,7 @@ import aggregation
 import transforms as T
 import pickle
 import autodp
-
+from dataset_loader import RescaledCIFAR10
 #from dataset_loader import ImageDataset
 import network
 from torch.utils.data import DataLoader
@@ -70,8 +70,8 @@ def train_tracher():
         for ll in extra_labels:
             train_labels.append(ll)
     elif config.dataset =='cifar10':
-        train_dataset = dataset.CIFAR10(root=config.data_dir, train=True, download=True)
-        test_dataset = dataset.CIFAR10(root=config.data_dir, train=False, download=True)
+        train_dataset = RescaledCIFAR10(root=config.data_dir, train=True, download=True)
+        test_dataset = RescaledCIFAR10(root=config.data_dir, train=False, download=True)
         ori_train_data = np.concatenate((train_dataset.data[:config.train_split],),axis=0)
         # ori_train_data = np.transpose(ori_train_data, (0, 3, 1, 2))
         print('orig data shape', ori_train_data.shape)

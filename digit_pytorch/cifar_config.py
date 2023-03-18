@@ -8,7 +8,7 @@ config.dataset='cifar10'
 config.nb_labels = 10
 #config.data_dir ='../list'
 config.data_dir = './'
-config.save_model='/cluster/scratch/asanyal/save_model/cifar10'
+config.save_model='/cluster/scratch/asanyal/save_model/cifar10rescaled_fast'
 #where to save model
 config.resnet = True
 config.batch_size = 50
